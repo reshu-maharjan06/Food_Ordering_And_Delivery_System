@@ -1,14 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sauni – Browse Menu</title>
+    <meta
+      name="description"
+      content="Explore authentic Nepali ethnic cuisine from Newari, Tharu, Tamang, Gurung and more at Sauni."
+    />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST</title>
-</head>
+    <!-- Fonts: Playfair Display for headings, Lato for body -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
 
-<body>
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-</body>
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
+  <body>
+    <!-- Top navigation bar -->
+    <header class="navbar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="images/logo/logo.png" alt="Sauni" />
+      </div>
+
+      <!-- Main nav links -->
+      <nav class="nav-links">
+        <a href="#" class="nav-link">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="#" class="nav-link">Heritage</a>
+        <a href="#" class="nav-link active">Browse</a>
+        <a href="#" class="nav-link">Our Story</a>
+      </nav>
+
+      <!-- Profile + Cart -->
+      <div class="user-actions">
+        <!-- Profile dropdown -->
+        <div class="profile-dropdown" id="profileDropdownToggle">
+          <div class="avatar">S</div>
+          <span class="username">
+            Shreya&nbsp;<i class="fa-solid fa-chevron-down fa-xs"></i>
+          </span>
+
+          <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#"><i class="fa-regular fa-user"></i> Profile</a>
+            <a href="#"><i class="fa-regular fa-pen-to-square"></i> Edit Profile</a>
+            <a href="#"><i class="fa-solid fa-clock-rotate-left"></i> Order History</a>
+            <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+          </div>
+        </div>
+
+        <!-- Cart button -->
+        <button class="cart-btn" id="cart-btn" aria-label="View cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-badge">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <main class="main-container">
+      <!-- Sidebar: cuisine categories -->
+      <aside class="sidebar">
+        <h3 class="sidebar-title">Cuisines</h3>
+        <ul class="cuisine-list" id="cuisine-list">
+          <!-- Filled dynamically by script.js -->
+        </ul>
+      </aside>
+
+      <!-- Content area -->
+      <section class="content">
+        <!-- Search bar -->
+        <div class="search-container">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search dishes…"
+            class="search-input"
+            aria-label="Search dishes"
+          />
+        </div>
+
+        <!-- Results count -->
+        <p class="results-count" id="results-count">50 dishes found</p>
+
+        <!-- Food grid (rendered via JS) -->
+        <div class="food-grid" id="food-grid"></div>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+  </body>
 </html>
