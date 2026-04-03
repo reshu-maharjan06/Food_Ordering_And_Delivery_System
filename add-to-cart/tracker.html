@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sauni — Live Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="tracker.css">
+</head>
+
+<body>
+
+    <!-- NAV: replace with your shared nav component/include -->
+    <header>
+        <nav class="customer-nav">
+            <a href="../landing/landing.html" class="cn-logo">Sauni</a>
+            <div class="cn-links">
+                <a href="../landing/landing.html" class="cn-link">Discover</a>
+                <a href="../landing/landing.html" class="cn-link">Browse All</a>
+                <a href="tracker.html" class="cn-link active">Track Order</a>
+                <a href="../landing/landing.html" class="cn-link">History</a>
+                <a href="../login/index.html" class="cn-link" id="logout-link">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="page-body">
+
+        <!-- STATUS PANEL -->
+        <div class="status-panel" id="statusPanel">
+            <div class="no-order">
+                <div style="font-size:3rem">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="2" x2="12" y2="6" />
+                        <line x1="12" y1="18" x2="12" y2="22" />
+                        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+                        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+                        <line x1="2" y1="12" x2="6" y2="12" />
+                        <line x1="18" y1="12" x2="22" y2="12" />
+                        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+                        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+                    </svg>
+                </div>
+                <p>Syncing status...</p>
+            </div>
+        </div>
+
+        <!-- MAP -->
+        <div class="map-area">
+            <div id="map"></div>
+            <div class="map-legend">
+                <div class="ml-row">
+                    <div class="ml-dot" style="background:var(--dest)"></div> Destination
+                </div>
+                <div class="ml-row">
+                    <div class="ml-dot" style="background:var(--rider)"></div> Rider
+                </div>
+                <div class="ml-row">
+                    <div class="ml-dot" style="background:var(--kitchen)"></div> Kitchen
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="map.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="tracker.js"></script>
+</body>
+
+</html>
