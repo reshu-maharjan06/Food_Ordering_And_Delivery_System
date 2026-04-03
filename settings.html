@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sauni Settings</title>
+  <meta name="description" content="Manage your Sauni account settings, profile and security." />
+
+  <!-- Fonts: Playfair Display for headings, Lato for body -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;500;700;900&display=swap"
+    rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="settings.css" />
+</head>
+
+<body>
+  <!-- Top navigation bar (Shared) -->
+  <header class="navbar">
+    <!-- Logo -->
+    <div class="logo">
+      <a href="index.html" title="Go to menu">
+        <img src="images/logo/logo.png" alt="Sauni" />
+      </a>
+    </div>
+
+    <!-- Main nav links -->
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Home
+      </a>
+      <a href="#" class="nav-link">Heritage</a>
+      <a href="index.html" class="nav-link">Browse</a>
+      <a href="#" class="nav-link">Our Story</a>
+    </nav>
+
+    <!-- Profile + Cart -->
+    <div class="user-actions">
+      <!-- Profile dropdown -->
+      <div class="profile-dropdown" id="profileDropdownToggle">
+        <div class="avatar">S</div>
+        <span class="username">
+          Shreya&nbsp;<i class="fa-solid fa-chevron-down fa-xs"></i>
+        </span>
+
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="settings.html"><i class="fa-regular fa-user"></i> Profile</a>
+          <a href="settings.html" data-target="profile"><i class="fa-regular fa-pen-to-square"></i> Edit Profile</a>
+          <a href="#"><i class="fa-solid fa-clock-rotate-left"></i> Order History</a>
+          <a href="settings.html" data-target="password"><i class="fa-solid fa-gear"></i> Settings</a>
+          <a href="#" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+        </div>
+      </div>
+
+      <!-- Cart button -->
+      <button class="cart-btn" id="cart-btn" aria-label="View cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main class="settings-container">
+
+    <!-- Settings Sidebar -->
+    <aside class="settings-sidebar">
+      <div class="settings-profile-info">
+        <div class="settings-avatar">J</div>
+        <div class="settings-user-meta">
+          <h4>John Customer</h4>
+          <p>Customer / Kathmandu</p>
+        </div>
+      </div>
+
+      <ul class="settings-nav" id="settings-nav">
+        <li class="active" data-target="profile">Edit Profile</li>
+        <li data-target="password">Password</li>
+        <li data-target="history">Order History</li>
+        <li class="logout">Log Out</li>
+      </ul>
+    </aside>
+
+    <!-- Content Area -->
+    <div class="settings-content">
+
+      <!-- Section: Edit Profile -->
+      <section id="profile-section" class="form-section active">
+        <div class="section-header">
+          <h2>Edit Profile</h2>
+          <p>Update your personal information and delivery details.</p>
+        </div>
+
+        <form class="settings-form" id="profile-form" novalidate>
+          <div class="form-group">
+            <label for="profile-name">Full Name</label>
+            <input type="text" id="profile-name" name="name" placeholder="John Customer" value="John Customer"
+              required />
+            <span class="error-msg" id="name-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="profile-email">Email Address</label>
+            <input type="email" id="profile-email" name="email" placeholder="customer@test.com"
+              value="customer@test.com" required />
+            <span class="error-msg" id="profile-email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="profile-phone">Phone Number</label>
+            <input type="tel" id="profile-phone" name="phone" placeholder="+977 98XXXX..." required />
+            <span class="error-msg" id="phone-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="profile-address">Default Delivery Address</label>
+            <textarea id="profile-address" name="address" placeholder="e.g. 14 Thamel Marg" rows="3"
+              required></textarea>
+            <span class="error-msg" id="address-error"></span>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-ghost" onclick="resetForm('profile-form')">Cancel</button>
+            <button type="submit" class="btn-primary" id="profile-submit">Update Profile</button>
+          </div>
+          <div id="profile-status" class="status-msg"></div>
+        </form>
+      </section>
+
+      <!-- Section: Password -->
+      <section id="password-section" class="form-section">
+        <div class="section-header">
+          <h2>Password</h2>
+          <p>Please enter your current password to change your password.</p>
+        </div>
+
+        <form class="settings-form" id="password-form" novalidate>
+          <div class="form-group">
+            <label for="current-password">Your Password</label>
+            <input type="password" id="current-password" name="current-password" placeholder="Current password"
+              required />
+            <span class="error-msg" id="current-password-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="new-password">New Password</label>
+            <input type="password" id="new-password" name="new-password" placeholder="Enter your new password"
+              required />
+            <p class="form-help">Your new password must be at least 8 characters long.</p>
+            <span class="error-msg" id="new-password-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Re-enter your New Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password"
+              required />
+            <span class="error-msg" id="confirm-password-error"></span>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-ghost" onclick="resetForm('password-form')">Cancel</button>
+            <button type="submit" class="btn-primary" id="password-submit">Update Password</button>
+          </div>
+          <div id="password-status" class="status-msg"></div>
+        </form>
+      </section>
+
+      <!-- Right Side: Info Panel (Dynamic Content) -->
+      <div class="settings-info-panel">
+        <!-- Info box for Profile -->
+        <div id="profile-info" class="info-card">
+          <i class="fa-solid fa-bullhorn"></i>
+          <h4>Newsletter</h4>
+          <p>Keep your email updated to receive the latest authentic Nepali recipes and exclusive offers from our master
+            chefs.</p>
+        </div>
+
+        <!-- Info box for Password -->
+        <div id="password-info" class="info-card" style="display: none;">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h4>Account Safety</h4>
+          <p>We strongly recommend using a complex password featuring a mix of letters, numbers and symbols to ensure
+            your account remains secure.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="settings.js" defer></script>
+</body>
+
+</html>
