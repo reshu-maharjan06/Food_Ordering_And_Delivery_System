@@ -1,0 +1,300 @@
+/* ===================================================
+   Sauni – Rating Modal Styles
+   Matches the premium aesthetic of the main site.
+   =================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Standalone Page Styles */
+.rating-page-body {
+  background-color: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-page-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.rating-hero {
+  width: 100%;
+  max-width: 500px;
+}
+
+.rating-card {
+  background: var(--card, #ffffff);
+  width: 100%;
+  padding: 48px 40px;
+  border-radius: 32px;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.rating-card.standalone {
+  transform: none; /* No modal animation needed */
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.1);
+}
+
+.modal-overlay .rating-card {
+  transform: translateY(20px) scale(0.96);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .rating-card {
+  transform: translateY(0) scale(1);
+}
+
+.rating-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text, #000);
+}
+
+.rating-subtitle {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-muted, #888);
+  margin-bottom: 32px;
+}
+
+/* Star Rating System */
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.star-rating i {
+  font-size: 1.85rem;
+  color: #e0d8cc;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+}
+
+.star-rating i:hover {
+  transform: scale(1.2);
+}
+
+.star-rating i.active,
+.star-rating i.hover {
+  color: var(--primary, #ff9e03);
+}
+
+/* Textarea Input */
+.rating-input-group {
+  margin-bottom: 32px;
+}
+
+.rating-textarea {
+  width: 100%;
+  padding: 18px 20px;
+  border: 1.5px solid var(--border, #ede8dc);
+  border-radius: 20px;
+  background: #fff;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.92rem;
+  resize: none;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.rating-textarea:focus {
+  border-color: var(--primary, #ff9e03);
+  box-shadow: 0 0 0 4px rgba(255, 158, 3, 0.1);
+}
+
+/* Actions */
+.rating-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.rating-actions button {
+  flex: 1;
+  padding: 14px;
+  border-radius: 18px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+}
+
+.btn-ghost {
+  background: #f5f3f0;
+  color: var(--text, #000);
+}
+
+.btn-ghost:hover {
+  background: #edeae4;
+}
+
+.btn-dark {
+  background: #2d2a26;
+  color: #fff;
+}
+
+.btn-dark:hover {
+  background: #1a1816;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-dark:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Animation for submission */
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.rating-success .rating-title {
+  color: #27ae60;
+}
+
+/* ── ORDER TREASURY (Table Redesign) ──────────────── */
+
+.section-header-treasury {
+  margin-bottom: 48px;
+}
+
+.subtitle-highlight {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ff9e03;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.section-header-treasury h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1a1816;
+  line-height: 1;
+}
+
+.treasury-table {
+  width: 100%;
+}
+
+.treasury-header {
+  display: grid;
+  grid-template-columns: 80px 100px 1fr 120px 120px 120px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid #ede8dc;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #b5b0a5;
+  text-align: left;
+}
+
+.treasury-row {
+  display: grid;
+  grid-template-columns: 80px 100px 1fr 120px 120px 120px;
+  padding: 24px 0;
+  border-bottom: 1px solid #f2efeb;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+  color: #1a1816;
+}
+
+.col-id { font-weight: 800; }
+.col-date { color: #888; font-size: 0.8rem; }
+.col-total { font-weight: 800; color: #1a1816; }
+
+/* Status & Action Badges */
+.badge, .action-link {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  background: #f1f8f3;
+  color: #27ae60;
+  text-align: center;
+}
+
+.action-link.action-rate {
+  background: #fff4e2;
+  color: #ff9e03;
+  transition: all 0.2s ease;
+}
+
+.action-link.action-rate:hover {
+  background: #ff9e03;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.badge-delivered {
+  background: #f1f8f3;
+  color: #27ae60;
+}
+
+.action-reviewed {
+  background: #f1f8f3;
+  color: #27ae60;
+  opacity: 0.8;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .treasury-header { display: none; }
+  .treasury-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+  }
+  .col-items { grid-column: span 2; }
+}

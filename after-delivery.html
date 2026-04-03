@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Your Experience - Sauni</title>
+  <meta name="description" content="Share your experience with Sauni and help us improve.">
+
+  <!-- Fonts: Playfair Display for headings, Lato for body -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;500;700;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="rating-modal.css">
+</head>
+
+<body class="rating-page-body">
+  <!-- Top navigation bar (Shared) -->
+  <header class="navbar">
+    <!-- Logo -->
+    <div class="logo">
+      <a href="index.html" title="Go to menu">
+        <img src="images/logo/logo.png" alt="Sauni">
+      </a>
+    </div>
+
+    <!-- Main nav links -->
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">
+        <i class="fa-solid fa-house"></i> Home
+      </a>
+      <a href="#" class="nav-link">Heritage</a>
+      <a href="index.html" class="nav-link">Browse</a>
+      <a href="#" class="nav-link">Our Story</a>
+    </nav>
+
+    <!-- Profile + Cart -->
+    <div class="user-actions">
+      <div class="profile-dropdown" id="profileDropdownToggle">
+        <div class="avatar">S</div>
+        <span class="username">
+          Shreya&nbsp;<i class="fa-solid fa-chevron-down fa-xs"></i>
+        </span>
+      </div>
+
+      <button class="cart-btn" id="cart-btn" aria-label="View cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main class="rating-page-container">
+    <div class="rating-hero">
+      <div class="rating-card-wrapper">
+        <div class="rating-card standalone">
+          <h2 class="rating-title">How was it?</h2>
+          <p class="rating-subtitle" id="ratingOrderSub">Tell us about your experience with order #3</p>
+
+          <div class="star-rating" id="starRating">
+            <i class="fa-solid fa-star" data-value="1" title="Poor"></i>
+            <i class="fa-solid fa-star" data-value="2" title="Fair"></i>
+            <i class="fa-solid fa-star" data-value="3" title="Good"></i>
+            <i class="fa-solid fa-star" data-value="4" title="Very Good"></i>
+            <i class="fa-solid fa-star" data-value="5" title="Excellent"></i>
+          </div>
+
+          <div class="rating-input-group">
+            <textarea id="ratingComment" class="rating-textarea" placeholder="Write a quick note (optional)..."
+              rows="4"></textarea>
+          </div>
+
+          <div class="rating-actions">
+            <button class="btn-ghost" id="cancelRating" onclick="window.location.href='settings.html?tab=history'">Back to History</button>
+            <button class="btn-dark" id="submitRating">Submit Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="rating-modal.js" defer></script>
+  <script>
+    // URL Parameter handling for standalone page
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('order') || '3';
+      const orderSub = document.getElementById('ratingOrderSub');
+      if (orderSub) {
+        orderSub.textContent = `Tell us about your experience with order #${orderId}`;
+      }
+    });
+  </script>
+</body>
+
+</html>
