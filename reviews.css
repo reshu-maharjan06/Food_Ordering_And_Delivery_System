@@ -1,0 +1,96 @@
+/* Review Board Specific Styles */
+
+.review-board-content {
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* Stats Cards Grid */
+.stats-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.review-stat-card {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.review-stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.stat-icon.food { color: var(--pending-color); }
+.stat-icon.driver { color: #ff5722; }
+.stat-icon.total { color: #607d8b; }
+
+.stat-divider {
+    width: 20px;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    margin-bottom: 0.8rem;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+/* Empty State */
+.review-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5rem;
+    color: var(--text-muted);
+}
+
+.large-star-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.2;
+}
+
+.review-empty-state h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* Avg Rating Pill */
+.avg-rating-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.8rem 1.4rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 0.85rem;
+    font-weight: 800;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
