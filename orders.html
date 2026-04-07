@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Control | Sauni Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside>
+        <div class="logo">
+            <img src="assets/images/logo.png" alt="Sauni Logo" class="sidebar-logo">
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Main</span>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="nav-item">
+                            <i class="fa-solid fa-table-columns"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="orders.html" class="nav-item active">
+                            <i class="fa-solid fa-rectangle-list"></i>
+                            Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="menu.html" class="nav-item">
+                            <i class="fa-solid fa-utensils"></i>
+                            Menu
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Operations</span>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="drivers.html" class="nav-item">
+                            <i class="fa-solid fa-truck"></i>
+                            Drivers & Map
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reviews.html" class="nav-item">
+                            <i class="fa-solid fa-star"></i>
+                            Reviews
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">A</div>
+                <div class="user-info">
+                    <h4>Admin</h4>
+                    <p>Mission Control</p>
+                </div>
+            </div>
+            <a href="logout.html" class="sign-out">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Sign out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <div class="header-left">
+                <h1>Order Control</h1>
+                <p>Real-time Kanban workflow</p>
+            </div>
+            <div class="header-right">
+                <div class="location-pill">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Flag_of_Nepal.svg" alt="Nepal Flag">
+                    SAUNI NEPAL
+                </div>
+                <div class="stats-group">
+                    <div class="stat-item">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" style="color: #2196f3;">1</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" style="color: #4caf50;">0</span>
+                        <span class="stat-label">Done Today</span>
+                    </div>
+                </div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    Live
+                </div>
+            </div>
+        </header>
+
+        <section class="kanban-board">
+            <!-- Pending -->
+            <div class="kanban-column" data-status="pending" ondragover="allowDrop(event)" ondrop="drop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-dot pending"></div>
+                        Pending
+                    </div>
+                    <div class="column-count">0</div>
+                </div>
+                <div class="cards-container">
+                    <div class="empty-state">No orders</div>
+                </div>
+            </div>
+
+            <!-- Prepared -->
+            <div class="kanban-column" data-status="prepared" ondragover="allowDrop(event)" ondrop="drop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-dot prepared"></div>
+                        Prepared
+                    </div>
+                    <div class="column-count">0</div>
+                </div>
+                <div class="cards-container">
+                    <div class="empty-state">No orders</div>
+                </div>
+            </div>
+
+            <!-- On the Way -->
+            <div class="kanban-column" data-status="ontheway" ondragover="allowDrop(event)" ondrop="drop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-dot ontheway"></div>
+                        On the Way
+                    </div>
+                    <div class="column-count">1</div>
+                </div>
+                <div class="cards-container">
+                    <!-- Sample Card -->
+                    <div class="order-card" id="order-1" draggable="true" ondragstart="drag(event)">
+                        <div class="card-header">
+                            <span class="order-number">#1</span>
+                            <span class="order-time">01:34 PM</span>
+                        </div>
+                        <h3 class="customer-name">customer1</h3>
+                        <p class="order-items">1x Ghonghi Curry, 2x Haku Choila</p>
+                        <div class="driver-pill">
+                            <i class="fa-solid fa-truck"></i>
+                            driver1
+                        </div>
+                        <div class="card-actions">
+                            <span class="order-price">Rs. 1110</span>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="order-status-btn" onclick="moveToDelivered('order-1')" style="background: #ff5722;">Delivered</button>
+                                <button class="close-btn" onclick="removeOrder('order-1')">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivered -->
+            <div class="kanban-column" data-status="delivered" ondragover="allowDrop(event)" ondrop="drop(event)">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-dot delivered"></div>
+                        Delivered
+                    </div>
+                    <div class="column-count">0</div>
+                </div>
+                <div class="cards-container">
+                    <div class="empty-state">No orders</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
