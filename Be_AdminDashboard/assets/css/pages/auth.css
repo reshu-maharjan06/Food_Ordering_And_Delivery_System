@@ -101,7 +101,7 @@ h4 {
     font-size: 12px;
     font-weight: 600;
     border-left: 3px solid #cc0000;
-    display: block; /* Visible by default when PHP error exists */
+    display: block;
 }
 
 .success-state {
@@ -246,7 +246,6 @@ h4 {
     margin-bottom: 40px;
 }
 
-/* signup form needs top spacing before buttons */
 .action-btns--signup {
     margin-top: 15px;
 }
@@ -458,7 +457,6 @@ h4 {
     background: #000;
 }
 
-/* login: borders on left side of each slice */
 .slice {
     flex: 1;
     height: 100%;

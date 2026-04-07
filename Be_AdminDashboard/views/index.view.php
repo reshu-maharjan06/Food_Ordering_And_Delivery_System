@@ -1,28 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/includes/profile_db.php';
-if (isset($_SESSION['user_id'])) {
-    header("Location: profile.php");
-    exit;
-}
-$error = "";
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $stmt = $pdo->prepare("SELECT id, username, password_hash, role FROM user WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
-    if ($user && password_verify($password, $user['password_hash'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = $user['role'];
-        header("Location: profile.php");
-        exit;
-    } else {
-        $error = "Invalid username or password!";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,13 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- LOGIN FORM SIDE -->
         <div class="split-left">
             <div class="login-wrapper">
-                <a href="login.php" class="brand brand--login">sauni</a>
+                <a href="landing.php" class="brand brand--login">sauni</a>
 
                 <div>
                     <h1>WELCOME BACK,</h1>
                     <p class="subtitle">Please login to your account.</p>
 
-                    <?php if($error): ?><div class="error-box"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+                    <?php if($error): ?><div class="error-box"><?= $error ?></div><?php endif; ?>
 
                     <form method="POST" action="">
                         <div class="input-group">
@@ -121,6 +96,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h4>1. Use of Service</h4>
                 <p>You must be at least 16 years old to use this service. You are responsible for maintaining the
                     confidentiality of your account credentials.</p>
+                <h4>2. Orders &amp; Payments</h4>
+                <p>All payments are final once an order is confirmed. Cancellations must be made within 5 minutes of
+                    placing the order.</p>
+                <h4>3. Delivery</h4>
+                <p>Delivery times are estimates and may vary. Sauni is not liable for delays beyond its reasonable
+                    control.</p>
+                <h4>4. Ratings &amp; Reviews</h4>
+                <p>Reviews must be honest. False reviews may result in account suspension.</p>
+                <h4>5. Prohibited Use</h4>
+                <ul>
+                    <li>Do not use Sauni for any illegal purpose</li>
+                    <li>Do not attempt to circumvent security measures</li>
+                    <li>Do not post offensive or false reviews</li>
+                </ul>
+                <h4>6. Changes</h4>
+                <p>Sauni reserves the right to modify these terms at any time.</p>
             </div>
             <div class="modal-foot">
                 <button class="btn-accept" onclick="closeModal('termsModal')">I Accept</button>
@@ -147,10 +138,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h4>1. Information We Collect</h4>
                 <ul>
                     <li>Name, email, and username at registration</li>
+                    <li>Order history and preferences</li>
+                    <li>Delivery location data</li>
                     <li>Usage data and session information</li>
                 </ul>
-                <h4>2. Data Security</h4>
+                <h4>2. How We Use Your Data</h4>
+                <p>We use your data to process orders and improve our service. We never sell your personal information.
+                </p>
+                <h4>3. Data Security</h4>
                 <p>Passwords are hashed and never stored in plain text.</p>
+                <h4>4. Your Rights</h4>
+                <p>Request data deletion at privacy@sauni.com.</p>
             </div>
             <div class="modal-foot">
                 <button class="btn-accept" onclick="closeModal('privacyModal')">Understood</button>
