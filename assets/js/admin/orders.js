@@ -1,7 +1,9 @@
-
 const STATUSES = ['pending', 'prepared', 'assigned', 'picked_up', 'delivered'];
 const STATUS_COLORS = { pending:'#ff9e03', prepared:'#3b82f6', assigned:'#8b5cf6', picked_up:'#f97316', delivered:'#10b981' };
 let allOrders = [], drivers = [];
+
+const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content;
+
 async function loadOrders() {
     const r = await fetch('../api.php?action=admin_orders_kanban');
     allOrders = await r.json();
@@ -70,8 +72,10 @@ function statusButtons(o) {
     return btns;
 }
 async function moveOrder(id, status) {
-    const r = await fetch('../api.php?action=update_order_status', {
-        method: 'POST', body: JSON.stringify({ order_id: id, status })
+    const r = await fetch('../api.php?action=transition_order_status', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf() },
+        body: JSON.stringify({ order_id: id, status })
     });
     const d = await r.json();
     if (d.success) loadOrders();
@@ -106,7 +110,9 @@ async function confirmAssign() {
     if (!sel) { alert('Please select a driver.'); return; }
     const driverId = parseInt(sel.dataset.did);
     const r = await fetch('../api.php?action=assign_driver', {
-        method: 'POST', body: JSON.stringify({ order_id: pendingAssignId, driver_id: driverId })
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf() },
+        body: JSON.stringify({ order_id: pendingAssignId, driver_id: driverId })
     });
     const d = await r.json();
     if (d.success) { closeModal('assignModal'); loadOrders(); }
@@ -120,11 +126,13 @@ function updateStats() {
     });
     const revenue = allOrders.filter(o => o.status === 'delivered').reduce((s, o) => s + parseFloat(o.total_amount), 0);
     const pending = allOrders.filter(o => o.status === 'pending').length;
-    const elTod = document.getElementById('stat-today');
-    const elRev = document.getElementById('stat-revenue');
+    const active = allOrders.filter(o => ['assigned', 'picked_up'].includes(o.status)).length;
+
+    const elTod = document.getElementById('stat-done');
+    const elRev = document.getElementById('stat-active');
     const elPend = document.getElementById('stat-pending');
     if (elTod) elTod.textContent = todayOrders.length;
-    if (elRev) elRev.textContent = 'Rs. ' + revenue.toFixed(0);
+    if (elRev) elRev.textContent = active;
     if (elPend) elPend.textContent = pending;
 }
 function openModal(id) { document.getElementById(id)?.classList.add('open'); }

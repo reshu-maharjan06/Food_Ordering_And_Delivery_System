@@ -1,15 +1,35 @@
 
-let allItems = [], activeCat = 'all';
+let allItems = [], activeCat = 'all', currentPage = 1, totalPages = 1;
 
-async function loadMenu() {
-    const r = await fetch('../api.php?action=admin_menu');
-    allItems = await r.json();
-    buildFilterTabs();
-    applyFilter();
+const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content;
+
+
+async function loadMenu(page = 1) {
+    currentPage = page;
+    const q = (document.getElementById('menuSearch')?.value || '').toLowerCase();
+    const r = await fetch(`../api.php?action=dishes&page=${page}&limit=8&search=${q}&cat=${activeCat}`);
+    const d = await r.json();
+    
+    // We update global list for viewItem/editItem logic if they rely on it
+    // but the actual rendering uses the returned current items
+    allItems = d.items; 
+    totalPages = d.pages;
+    
+    renderPagination();
+    renderList(d.items);
+    
+    // Also build filter tabs if they haven't been built or categories might have changed
+    // Actually, categories are usually fixed, but let's keep it simple
+    if (page === 1 && itemsNeedTabs()) buildFilterTabs();
 }
 
-function buildFilterTabs() {
-    const cats = [...new Set(allItems.map(i => i.category))];
+function itemsNeedTabs() {
+    return document.getElementById('filterTabs').children.length <= 1;
+}
+
+async function buildFilterTabs() {
+    const r = await fetch('../api.php?action=menu_categories');
+    const cats = await r.json();
     const wrap = document.getElementById('filterTabs');
     if (!wrap) return;
     wrap.innerHTML = `<button class="filter-tab ${activeCat === 'all' ? 'active' : ''}" onclick="filterMenu('all',this)">All</button>`
@@ -22,18 +42,28 @@ function filterMenu(cat, btn) {
     activeCat = cat;
     document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    applyFilter();
+    loadMenu(1);
 }
 
 function searchMenu(q) {
-    applyFilter();
+    // Debounce would be nice, but simple for now
+    loadMenu(1);
 }
 
-function applyFilter() {
-    const q = (document.getElementById('menuSearch')?.value || '').toLowerCase();
-    let list = activeCat === 'all' ? allItems : allItems.filter(i => i.category === activeCat);
-    if (q) list = list.filter(i => i.name.toLowerCase().includes(q) || (i.description || '').toLowerCase().includes(q));
-    renderList(list);
+function renderPagination() {
+    const wrap = document.getElementById('paginationWrap');
+    if (!wrap) return;
+    if (totalPages <= 1) {
+        wrap.innerHTML = '';
+        return;
+    }
+    
+    let html = `
+        <button class="btn btn-xs btn-outline" ${currentPage === 1 ? 'disabled' : ''} onclick="loadMenu(${currentPage - 1})">Prev</button>
+        <span style="font-size:0.8rem; font-weight:700; color:var(--text2)">Page ${currentPage} of ${totalPages}</span>
+        <button class="btn btn-xs btn-outline" ${currentPage === totalPages ? 'disabled' : ''} onclick="loadMenu(${currentPage + 1})">Next</button>
+    `;
+    wrap.innerHTML = html;
 }
 
 function renderList(items) {
@@ -176,6 +206,7 @@ async function saveMenu() {
     const action = window.currentEditId ? 'edit_menu' : 'add_menu';
     const r = await fetch('../api.php?action=' + action, {
         method: 'POST',
+        headers: { 'X-CSRF-Token': csrf() },
         body: fd
     });
     
@@ -192,7 +223,7 @@ async function deleteItem(id) {
     if (!confirm('Permanent delete this dish from catalog?')) return;
     const r = await fetch('../api.php?action=delete_menu', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf() },
         body: JSON.stringify({ id })
     });
     const d = await r.json();

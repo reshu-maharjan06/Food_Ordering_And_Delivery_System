@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost'; 
-$dbname = 'custom_db'; 
+$dbname = 'admin_db'; 
 $user = 'root'; 
 $pass = '';
 try {

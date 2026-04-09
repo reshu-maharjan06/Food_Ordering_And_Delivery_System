@@ -113,7 +113,7 @@ try {
         id INT AUTO_INCREMENT PRIMARY KEY,
         order_id INT NOT NULL,
         customer_id INT NOT NULL,
-        stars INT NOT NULL DEFAULT 5 CHECK(stars >= 1 AND stars <= 5),
+        stars INT NOT NULL DEFAULT 5,
         comment TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (order_id) REFERENCES `order_`(id) ON DELETE CASCADE,
@@ -341,6 +341,41 @@ try {
         }
     }
     echo "<div class='ok'>✓ Local Sync: $sync_count/50 images matched and updated locally.</div>";
+
+    // ----------------- DUMMY DATA SEEDING FOR ADMIN BOARD -----------------
+    echo "<div class='sync'>📦 Seeding Dummy Orders & Reviews for Admin Analytics...</div>";
+    $statuses = ['pending', 'prepared', 'assigned', 'picked_up', 'delivered'];
+    $drivers = [3, 4]; // Rider One, Rider Two (from seeding code above)
+    $menuItems = $pdo->query("SELECT id, price FROM menu_item LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
+    
+    for ($i = 1; $i <= 25; $i++) {
+        $status = ($i <= 5) ? 'pending' : (($i <= 10) ? 'prepared' : $statuses[array_rand($statuses)]);
+        $customer_id = 2; // John Customer
+        $driver_id = (in_array($status, ['assigned', 'picked_up', 'delivered'])) ? $drivers[array_rand($drivers)] : null;
+        $address = "Street " . rand(1, 100) . ", Kathmandu";
+        $placed_at = date('Y-m-d H:i:s', strtotime("-" . rand(0, 5) . " days -" . rand(0, 23) . " hours"));
+        
+        $pdo->prepare("INSERT INTO `order_` (customer_id, delivery_person_id, status, delivery_address, total_amount, note, placed_at) VALUES (?,?,?,?,?,?,?)")
+            ->execute([$customer_id, $driver_id, $status, $address, 0, "Dummy order #$i for testing", $placed_at]);
+        $order_id = $pdo->lastInsertId();
+        
+        $numItems = rand(1, 4);
+        $total = 0;
+        for ($j = 0; $j < $numItems; $j++) {
+            $item = $menuItems[array_rand($menuItems)];
+            $qty = rand(1, 2);
+            $pdo->prepare("INSERT INTO order_item (order_id, menu_item_id, quantity, unit_price) VALUES (?,?,?,?)")
+                ->execute([$order_id, $item['id'], $qty, $item['price']]);
+            $total += ($item['price'] * $qty);
+        }
+        $pdo->prepare("UPDATE `order_` SET total_amount = ? WHERE id = ?")->execute([$total, $order_id]);
+        
+        if ($status === 'delivered') {
+            $pdo->prepare("INSERT INTO review (order_id, customer_id, stars, comment, created_at) VALUES (?,?,?,?,?)")
+                ->execute([$order_id, $customer_id, rand(3, 5), "Automated test review for order #$order_id", $placed_at]);
+        }
+    }
+    echo "<div class='ok'>✓ 25 Dummy Orders and Reviews Synced</div>";
 
     echo "</div>"; // end log-card
     echo "<div class='btn-wrap'><a class='launch' href='index.php'>ENTER SAUNI PLATFORM</a></div>";

@@ -14,6 +14,7 @@ define('RESTAURANT_NAME', 'Sauni Kitchen, Thamel');
 $action = $_GET['action'] ?? '';
 $uid    = $_SESSION['user_id'] ?? 0;
 $role   = $_SESSION['role'] ?? '';
+
 function handle_menu_upload($files, $existing = '') {
     if (empty($files['image_file']['name'])) return $existing;
     $target_dir = __DIR__ . '/assets/img/menu/';
@@ -26,6 +27,7 @@ function handle_menu_upload($files, $existing = '') {
     }
     return $existing;
 }
+
 function attach_items($pdo, &$orders) {
     foreach ($orders as &$o) {
         $stmt = $pdo->prepare("
@@ -40,174 +42,182 @@ function attach_items($pdo, &$orders) {
         $o['items_json'] = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 }
-if ($action === 'restaurant_info') {
-    echo json_encode(['lat'=>RESTAURANT_LAT,'lng'=>RESTAURANT_LNG,'name'=>RESTAURANT_NAME]); exit;
-}
-if ($action === 'menu') {
-    $cat = $_GET['cat'] ?? 'all';
-    if ($cat !== 'all') { 
-        $s=$pdo->prepare("SELECT m.*, COALESCE(ct.name, c.name, 'Other') as category FROM menu_item m JOIN category c ON m.category_id=c.id LEFT JOIN cuisine_type ct ON c.cuisine_type_id=ct.id WHERE (ct.name=? OR c.name=?) AND (c.name NOT LIKE '%Combo%' AND c.name NOT LIKE '%Discount%') ORDER BY m.is_popular DESC"); 
-        $s->execute([$cat, $cat]); 
-    } else { 
-        $s=$pdo->query("SELECT m.*, COALESCE(ct.name, c.name, 'Other') as category FROM menu_item m JOIN category c ON m.category_id=c.id LEFT JOIN cuisine_type ct ON c.cuisine_type_id=ct.id WHERE c.name NOT LIKE '%Combo%' AND c.name NOT LIKE '%Discount%' ORDER BY m.is_popular DESC"); 
-    }
-    echo json_encode($s->fetchAll(PDO::FETCH_ASSOC)); exit;
-}
+
 if ($action === 'menu_categories') {
     echo json_encode(array_column($pdo->query("SELECT DISTINCT c.name as category FROM category c JOIN menu_item m ON m.category_id=c.id WHERE c.name NOT LIKE '%Combo%' AND c.name NOT LIKE '%Discount%' ORDER BY c.name")->fetchAll(PDO::FETCH_ASSOC),'category')); exit;
 }
-if ($action === 'search_place') {
-    $q = $_GET['q'] ?? ''; if (!$q) { echo json_encode([]); exit; }
-    $url = 'https://nominatim.openstreetmap.org/search?format=json&limit=5&q='.urlencode($q.', Kathmandu');
-    $ctx = stream_context_create(['http'=>['header'=>'User-Agent: SauniApp/1.0']]);
-    echo file_get_contents($url,false,$ctx) ?: json_encode([]); exit;
-}
-if ($action === 'place_order') {
-    $data = json_decode(file_get_contents('php://input'),true);
-    if (!$uid||empty($data['items'])||!isset($data['lat'])) { echo json_encode(['error'=>'Invalid data']); exit; }
-    $chk=$pdo->prepare("SELECT id FROM `order_` WHERE customer_id=? AND status!='delivered' AND status!='cancelled'");
-    $chk->execute([$uid]);
-    if ($chk->rowCount()>0) { echo json_encode(['error'=>'You already have an active order!']); exit; }
-    try {
-        $pdo->beginTransaction();
-        $stmt=$pdo->prepare("INSERT INTO `order_` (customer_id,total_amount,dest_lat,dest_lng,delivery_address,note) VALUES (?,?,?,?,?,?)");
-        $stmt->execute([$uid,$data['total'],$data['lat'],$data['lng'],$data['address']??'Pinned on Map',$data['note']??'']);
-        $oid = $pdo->lastInsertId();
-        $istmt = $pdo->prepare("INSERT INTO order_item (order_id, menu_item_id, quantity, unit_price) VALUES (?,?,?,?)");
-        foreach ($data['items'] as $it) {
-            $istmt->execute([$oid, $it['id'] ?? null, $it['qty'], $it['price']]);
-        }
-        $pdo->commit();
-        echo json_encode(['success'=>true,'order_id'=>$oid]);
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo json_encode(['error'=>'DB error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-if ($action === 'customer_orders') {
-    $stmt=$pdo->prepare("SELECT o.*, o.placed_at as created_at, u.username as driver_name, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM `order_` o LEFT JOIN user u ON o.delivery_person_id=u.id LEFT JOIN review r ON o.id=r.order_id AND o.customer_id=r.customer_id WHERE o.customer_id=? ORDER BY o.id DESC");
-    $stmt->execute([$uid]); 
+
+
+if ($action === 'admin_orders_kanban') {
+    $stmt=$pdo->query("SELECT o.*, o.placed_at as created_at, cu.username as customer_name, dr.username as driver_name FROM `order_` o JOIN user cu ON o.customer_id=cu.id LEFT JOIN user dr ON o.delivery_person_id=dr.id ORDER BY o.id DESC");
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     attach_items($pdo, $orders);
     echo json_encode($orders); exit;
 }
-if ($action === 'active_order') {
-    $stmt=$pdo->prepare("SELECT o.*, u.username as driver_name, u.lat as driver_lat, u.lng as driver_lng FROM `order_` o LEFT JOIN user u ON o.delivery_person_id=u.id WHERE o.customer_id=? AND o.status!='delivered' AND o.status!='cancelled' ORDER BY o.id DESC LIMIT 1");
-    $stmt->execute([$uid]); 
-    $order = $stmt->fetch(PDO::FETCH_ASSOC)?:null;
-    if ($order) {
-        $o = [$order];
-        attach_items($pdo, $o);
-        $order = $o[0];
+
+if ($action === 'active_orders_board') {
+    $stmt=$pdo->prepare("SELECT o.id, o.placed_at as created_at, cu.username as customer_name, dr.username as driver_name, o.total_amount, o.status FROM `order_` o JOIN user cu ON o.customer_id=cu.id LEFT JOIN user dr ON o.delivery_person_id=dr.id WHERE o.status IN ('pending', 'prepared') ORDER BY o.placed_at ASC");
+    $stmt->execute();
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    attach_items($pdo, $orders);
+    echo json_encode($orders); exit;
+}
+
+if ($action === 'mark_prepared') {
+    $data=json_decode(file_get_contents('php://input'),true);
+    $stmt=$pdo->prepare("UPDATE `order_` SET status='prepared' WHERE id=? AND status IN ('pending', 'confirmed')");
+    $stmt->execute([$data['order_id']]);
+    echo json_encode(['success'=>$stmt->rowCount()>0,'error'=>$stmt->rowCount()?null:'Not in pending/confirmed state']); exit;
+}
+
+if ($action === 'assign_driver') {
+    $data=json_decode(file_get_contents('php://input'),true);
+    if (!($data['order_id']??0)||!($data['driver_id']??0)) { echo json_encode(['error'=>'Missing data']); exit; }
+    $stmt=$pdo->prepare("UPDATE `order_` SET delivery_person_id=?,status='assigned' WHERE id=? AND status='prepared'");
+    $stmt->execute([$data['driver_id'],$data['order_id']]);
+    echo json_encode(['success'=>$stmt->rowCount()>0,'error'=>$stmt->rowCount()?null:'Order must be in prepared state']); exit;
+}
+
+if ($action === 'admin_menu') { 
+    echo json_encode($pdo->query("SELECT m.*, COALESCE(ct.name, c.name, 'Other') as category FROM menu_item m JOIN category c ON m.category_id=c.id LEFT JOIN cuisine_type ct ON c.cuisine_type_id=ct.id ORDER BY category, m.name")->fetchAll(PDO::FETCH_ASSOC)); exit; 
+}
+
+if ($action === 'add_menu') {
+    $data = $_POST;
+    if (!($data['name']??'')||!($data['price']??0)) { echo json_encode(['error'=>'Fill required fields']); exit; }
+    $cat = $data['category'] ?? 'Other';
+    $cstmt = $pdo->prepare("SELECT id FROM category WHERE name=?"); $cstmt->execute([$cat]);
+    $cid = $cstmt->fetchColumn();
+    if (!$cid) {
+        $pdo->prepare("INSERT INTO category (name) VALUES (?)")->execute([$cat]);
+        $cid = $pdo->lastInsertId();
+        $cst = $pdo->prepare("SELECT id FROM cuisine_type WHERE name=?"); $cst->execute([$cat]);
+        $ctid = $cst->fetchColumn();
+        if ($ctid) $pdo->prepare("UPDATE category SET cuisine_type_id=? WHERE id=?")->execute([$ctid, $cid]);
     }
-    echo json_encode($order); exit;
+    $img_url = handle_menu_upload($_FILES);
+    $stmt=$pdo->prepare("INSERT INTO menu_item (name,category_id,price,description,image_url,is_popular) VALUES (?,?,?,?,?,?)");
+    $stmt->execute([$data['name'],$cid,$data['price'],$data['description']??'',$img_url,$data['is_popular']?1:0]);
+    echo json_encode(['success'=>true,'id'=>$pdo->lastInsertId()]); exit;
 }
-if ($action === 'check_review') {
-    $order_id = (int)($_GET['order_id'] ?? 0);
-    if (!$uid || !$order_id) { echo json_encode(['already_reviewed'=>false]); exit; }
-    $chk = $pdo->prepare("SELECT id FROM review WHERE order_id=? AND customer_id=?");
-    $chk->execute([$order_id, $uid]);
-    echo json_encode(['already_reviewed' => $chk->rowCount() > 0]); exit;
-}
-if ($action === 'rate_order') {
-    $data = json_decode(file_get_contents('php://input'),true);
-    if (!$uid||!($data['order_id']??0)) { echo json_encode(['error'=>'Invalid']); exit; }
-    $chk=$pdo->prepare("SELECT id FROM review WHERE order_id=? AND customer_id=?");
-    $chk->execute([$data['order_id'],$uid]);
-    if ($chk->rowCount()>0) { echo json_encode(['error'=>'Already rated']); exit; }
-    $combined = round((int)($data['rating'] ?? 5));
-    $stmt=$pdo->prepare("INSERT INTO review (order_id,customer_id,stars,comment) VALUES (?,?,?,?)");
-    $stmt->execute([$data['order_id'],$uid,$combined,$data['comment']??'']);
+
+if ($action === 'edit_menu') {
+    $data = $_POST;
+    if (!($data['id']??0)) { echo json_encode(['error'=>'Missing ID']); exit; }
+    $cat = $data['category'] ?? 'Other';
+    $cstmt = $pdo->prepare("SELECT id FROM category WHERE name=?"); $cstmt->execute([$cat]);
+    $cid = $cstmt->fetchColumn();
+    if (!$cid) {
+        $pdo->prepare("INSERT INTO category (name) VALUES (?)")->execute([$cat]);
+        $cid = $pdo->lastInsertId();
+        $cst = $pdo->prepare("SELECT id FROM cuisine_type WHERE name=?"); $cst->execute([$cat]);
+        $ctid = $cst->fetchColumn();
+        if ($ctid) $pdo->prepare("UPDATE category SET cuisine_type_id=? WHERE id=?")->execute([$ctid, $cid]);
+    }
+    $img_url = handle_menu_upload($_FILES, $data['existing_image'] ?? '');
+    $stmt=$pdo->prepare("UPDATE menu_item SET name=?,category_id=?,price=?,description=?,image_url=?,is_popular=? WHERE id=?");
+    $stmt->execute([$data['name'],$cid,$data['price'],$data['description'],$img_url,$data['is_popular']?1:0,$data['id']]);
     echo json_encode(['success'=>true]); exit;
 }
-if ($action === 'order_items') {
-    $order_id = isset($_GET['order_id']) ? (int)$_GET['order_id'] : 0;
-    if ($order_id <= 0) {
-        echo json_encode(['error' => 'Valid Order ID is required']);
-        exit;
-    }
-    try {
-        $stmt = $pdo->prepare("
-            SELECT o.id as order_id, o.status, o.placed_at as order_date, 
-                   i.id as order_item_id, m.name as item_name, i.quantity, i.unit_price as price
-            FROM `order_` o
-            JOIN order_item i ON o.id = i.order_id
-            LEFT JOIN menu_item m ON i.menu_item_id = m.id
-            WHERE o.id = ?
-        ");
-        $stmt->execute([$order_id]);
-        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (empty($items)) {
-            echo json_encode(['error' => 'No items found for this order']);
-            exit;
-        }
-
-        $result = [
-            'order_id' => $items[0]['order_id'],
-            'status' => $items[0]['status'],
-            'order_date' => $items[0]['order_date'],
-            'items' => array_map(function($row) {
-                return [
-                    'item_name' => $row['item_name'],
-                    'quantity' => $row['quantity'],
-                    'price' => $row['price']
-                ];
-            }, $items)
-        ];
-        echo json_encode($result);
-    } catch(PDOException $e) {
-        echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
-    }
-    exit;
+if ($action === 'delete_menu') {
+    $data=json_decode(file_get_contents('php://input'),true);
+    $pdo->prepare("DELETE FROM menu_item WHERE id=?")->execute([$data['id']]);
+    echo json_encode(['success'=>true]); exit;
 }
 
-if ($action === 'past_orders') {
-    $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-    $limit = 10;
-    $offset = ($page - 1) * $limit;
-    
-    $status_filter = $_GET['status'] ?? '';
-    $date_filter = $_GET['date'] ?? '';
-
-    $query = "
-        SELECT o.*, o.placed_at as created_at, 
-               cu.username as customer_name, dr.username as driver_name
-        FROM `order_` o
-        JOIN user cu ON o.customer_id = cu.id
-        LEFT JOIN user dr ON o.delivery_person_id = dr.id
-        WHERE o.status IN ('delivered', 'cancelled')
-    ";
-    $params = [];
-
-    if (!empty($status_filter)) {
-        $query .= " AND o.status = ?";
-        $params[] = $status_filter;
-    }
-    if (!empty($date_filter)) {
-        $query .= " AND DATE(o.placed_at) = ?";
-        $params[] = $date_filter;
-    }
-
-    $query .= " ORDER BY o.placed_at DESC LIMIT $limit OFFSET $offset";
-    
-    try {
-        $stmt = $pdo->prepare($query);
+if ($action === 'dishes') {
+    $method = $_SERVER['REQUEST_METHOD'];
+    if ($method === 'GET') {
+        $page = (int)($_GET['page'] ?? 1);
+        $limit = (int)($_GET['limit'] ?? 10);
+        $search = $_GET['search'] ?? '';
+        $cat = $_GET['cat'] ?? 'all';
+        $offset = ($page - 1) * $limit;
+        
+        $where = ["1=1"];
+        $params = [];
+        if ($search) {
+            $where[] = "(m.name LIKE ? OR m.description LIKE ?)";
+            $params[] = "%$search%";
+            $params[] = "%$search%";
+        }
+        if ($cat !== 'all') {
+            $where[] = "COALESCE(ct.name, c.name) = ?";
+            $params[] = $cat;
+        }
+        $whereSql = implode(" AND ", $where);
+        
+        $countStmt = $pdo->prepare("SELECT COUNT(*) FROM menu_item m JOIN category c ON m.category_id=c.id LEFT JOIN cuisine_type ct ON c.cuisine_type_id=ct.id WHERE $whereSql");
+        $countStmt->execute($params);
+        $total = (int)$countStmt->fetchColumn();
+        
+        $sql = "SELECT m.*, COALESCE(ct.name, c.name, 'Other') as category 
+                FROM menu_item m 
+                JOIN category c ON m.category_id=c.id 
+                LEFT JOIN cuisine_type ct ON c.cuisine_type_id=ct.id 
+                WHERE $whereSql 
+                ORDER BY m.id DESC 
+                LIMIT $limit OFFSET $offset";
+        $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
-        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        attach_items($pdo, $orders);
-
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         echo json_encode([
+            'items' => $items,
+            'total' => $total,
             'page' => $page,
             'limit' => $limit,
-            'data' => $orders
+            'pages' => ceil($total / $limit)
         ]);
-    } catch(PDOException $e) {
-        echo json_encode(['error' => 'Database error']);
+        exit;
+    } elseif ($method === 'POST') {
+        $_GET['action'] = 'add_menu';
+    } elseif ($method === 'PUT') {
+        $_GET['action'] = 'edit_menu';
+    } elseif ($method === 'DELETE') {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $pdo->prepare("DELETE FROM menu_item WHERE id=?")->execute([$data['id']]);
+        echo json_encode(['success' => true]); exit;
     }
-    exit;
+}
+
+if ($action === 'admin_drivers') {
+    echo json_encode($pdo->query("SELECT id,username,lat,lng FROM user WHERE role='delivery'")->fetchAll(PDO::FETCH_ASSOC)); exit;
+}
+
+if ($action === 'admin_ratings') {
+    echo json_encode($pdo->query("SELECT r.*, r.stars as rating, u.username, o.total_amount FROM review r JOIN user u ON r.customer_id=u.id JOIN `order_` o ON r.order_id=o.id ORDER BY r.id DESC")->fetchAll(PDO::FETCH_ASSOC)); exit;
+}
+
+if ($action === 'transition_order_status') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $order_id = (int)($data['order_id'] ?? 0);
+    $new_status = $data['status'] ?? '';
+    
+    $stmt = $pdo->prepare("SELECT status FROM `order_` WHERE id=?");
+    $stmt->execute([$order_id]);
+    $current_status = $stmt->fetchColumn();
+    
+    if (!$current_status) { echo json_encode(['error' => 'Order not found']); exit; }
+    
+    $allowed = [
+        'pending' => ['prepared', 'cancelled'],
+        'prepared' => ['assigned', 'cancelled'],
+        'assigned' => ['picked_up'],
+        'picked_up' => ['delivered'],
+        'delivered' => [],
+        'cancelled' => []
+    ];
+    
+    if (!in_array($new_status, $allowed[$current_status] ?? [])) {
+        echo json_encode(['error' => "Invalid transition from $current_status to $new_status"]); exit;
+    }
+    
+    $stmt = $pdo->prepare("UPDATE `order_` SET status=?, status_updated_at=NOW() WHERE id=?");
+    $stmt->execute([$new_status, $order_id]);
+    
+    echo json_encode(['success' => true, 'new_status' => $new_status]); exit;
 }
 
 echo json_encode(['error'=>'Invalid action: '.$action]);
