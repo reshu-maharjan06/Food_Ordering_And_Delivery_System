@@ -1,0 +1,292 @@
+/* FoodBot Smart Assistant Styles */
+
+/* Theme colors (easy to reuse) */
+:root {
+  --ai-bg: rgba(17, 24, 39, 0.95);
+  --ai-accent: #ff3b00;
+  --ai-text: #f9fafb;
+  --ai-bubble-user: #374151;
+  --ai-bubble-bot: #1f2937;
+  --ai-glass: rgba(255, 255, 255, 0.05);
+}
+
+/* Root wrapper fixed at bottom-right */
+#ai-assistant-root {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 9999;
+  font-family: sans-serif;
+}
+
+/* Floating round button */
+.ai-trigger {
+  width: 60px;
+  height: 60px;
+  background: var(--ai-accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(255, 59, 0, 0.4);
+  transition: 0.4s;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+.ai-trigger:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 15px 35px rgba(255, 59, 0, 0.6);
+}
+
+/* Chat window */
+.ai-window {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 380px;
+  height: 550px;
+  background: var(--ai-bg);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.4s;
+}
+.ai-window.open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ai-header-icon img,
+.ai-input-wrap img,
+.ai-trigger img {
+  filter: brightness(0) invert(1);
+}
+
+/* Header */
+.ai-header {
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 59, 0, 0.1), transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ai-header-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--ai-accent);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ai-header-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ai-text);
+}
+.ai-header-info span {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ai-header-info span::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+}
+
+/* Messages area */
+.ai-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Message bubbles */
+.ai-msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  animation: slideUp 0.3s ease-out;
+  word-break: break-word;
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ai-msg.bot {
+  align-self: flex-start;
+  background: var(--ai-bubble-bot);
+  color: #d1d5db;
+  border-bottom-left-radius: 4px;
+}
+.ai-msg.user {
+  align-self: flex-end;
+  background: var(--ai-accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.ai-msg.error {
+  background: #7f1d1d;
+  color: #fee2e2;
+}
+
+/* Food card */
+.ai-dish-card {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ai-dish-img {
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+}
+.ai-dish-info {
+  padding: 12px;
+}
+.ai-dish-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: white;
+}
+.ai-dish-price {
+  font-size: 0.8rem;
+  color: var(--ai-accent);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.ai-btn-add {
+  width: 100%;
+  padding: 8px;
+  background: var(--ai-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ai-btn-add:hover {
+  filter: brightness(1.1);
+}
+
+/* Footer hints */
+.ai-footer {
+  padding: 10px 20px;
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.1);
+}
+.ai-hint-btn {
+  background: var(--ai-glass);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.ai-hint-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Input area */
+.ai-input-wrap {
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 10px;
+}
+.ai-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 10px 15px;
+  color: #fff;
+}
+.ai-input:focus {
+  border-color: var(--ai-accent);
+}
+.ai-send {
+  width: 40px;
+  height: 40px;
+  background: var(--ai-accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.ai-send:hover {
+  transform: scale(1.05);
+}
+
+/* Typing indicator */
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+}
+.typing span {
+  width: 6px;
+  height: 6px;
+  background: #6b7280;
+  border-radius: 50%;
+  animation: blink 1.4s infinite both;
+}
+.typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .ai-window {
+    width: calc(100vw - 40px);
+    height: 80vh;
+    right: -10px;
+  }
+}

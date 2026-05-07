@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI FoodBot Chat</title>
+    <link rel="stylesheet" href="chat.css" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fafaf9;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- FoodBot Smart Assistant (Chat UI) -->
+    <div id="ai-assistant-root">
+      <!-- Chat Window (this box shows when chatbot is open) -->
+      <div class="ai-window" id="aiWindow">
+        <div class="ai-header">
+          <div class="ai-header-icon">
+            <img src="bot-icon.svg" width="24" height="24" alt="Bot" />
+          </div>
+          <div class="ai-header-info">
+            <h3>FoodBot</h3>
+            <span>FoodBot Assistant Active</span>
+          </div>
+        </div>
+
+        <!-- Messages Area (chat history appears here) -->
+        <div class="ai-messages" id="aiMessages"></div>
+
+        <!-- Input Area (user types message + send button) -->
+        <div class="ai-input-wrap">
+          <!-- Text box for user input -->
+          <input
+            type="text"
+            id="aiInput"
+            class="ai-input"
+            placeholder="Type a message..."
+          />
+
+          <!-- Send button with icon -->
+          <button id="aiSend" class="ai-send">
+            <img src="send-icon.svg" width="20" height="20" alt="Send" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Floating Trigger Button (small button bottom-right to open/close chat) -->
+      <div class="ai-trigger" id="aiTrigger" title="Open Smart Assistant">
+        <img src="chat-icon.svg" width="30" height="30" alt="Chat" />
+      </div>
+    </div>
+
+    <script src="chat.js"></script>
+  </body>
+</html>
