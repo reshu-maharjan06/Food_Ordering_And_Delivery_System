@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eSewa Payment Portal (Mock)</title>
+
+    <!-- CSS styles specifically for this mock eSewa page -->
+    <style>
+      /* Import a clean, modern font */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+      /* Basic reset to make things look consistent across browsers */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Gray background for the whole page */
+      body {
+        background-color: #f3f4f6;
+        color: #333;
+      }
+
+      /* The green top navigation bar */
+      .header {
+        background-color: #60bb46; /* eSewa's signature green */
+        padding: 15px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* eSewa Logo area in the header */
+      .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      /* Main content wrapper */
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr; /* Left side (login) is slightly larger than right side (summary) */
+        gap: 20px;
+        padding: 0 20px;
+      }
+
+      /* White boxes that hold content */
+      .card {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Login form title */
+      .login-section h2 {
+        margin-bottom: 20px;
+        color: #1e293b;
+        font-size: 1.25rem;
+      }
+
+      /* Input field wrappers */
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      /* Labels above input fields */
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        color: #475569;
+      }
+
+      /* The actual text boxes */
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      /* Green border when clicking on a text box */
+      .form-group input:focus {
+        border-color: #60bb46;
+      }
+
+      /* Wrapper for the buttons at the bottom of the form */
+      .action-btns {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      /* General button styling */
+      .btn {
+        flex: 1; /* Make buttons take equal width */
+        padding: 14px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      .btn:hover {
+        opacity: 0.9;
+      }
+
+      /* The main green "Pay" button */
+      .btn-pay {
+        background-color: #60bb46;
+        color: white;
+      }
+
+      /* The gray "Cancel" button */
+      .btn-cancel {
+        background-color: #f1f5f9;
+        color: #64748b;
+      }
+
+      /* The right-side box showing order details */
+      .summary-card {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+      }
+
+      /* Store name at the top of the summary */
+      .merchant-info {
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .merchant-info h3 {
+        color: #0f172a;
+        margin-bottom: 5px;
+      }
+
+      /* The big price number */
+      .amount-display {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #60bb46;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      /* Rows for subtotal, tax, etc. */
+      .details-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+        color: #475569;
+      }
+
+      /* Mobile view adjustments (stack side-by-side boxes vertically) */
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <header class="header">
+      <div class="header-logo">
+        <!-- eSewa logo icon -->
+        <svg viewBox="0 0 500 500" width="30" height="30">
+          <path
+            fill="#ffffff"
+            d="M250,50 C139.5,50 50,139.5 50,250 C50,360.5 139.5,450 250,450 C360.5,450 450,360.5 450,250 C450,139.5 360.5,50 250,50 Z"
+          />
+          <text
+            x="250"
+            y="270"
+            font-family="Arial"
+            font-size="70"
+            font-weight="bold"
+            fill="#60BB46"
+            text-anchor="middle"
+          >
+            e
+          </text>
+        </svg>
+        eSewa
+      </div>
+      <div style="font-size: 0.9rem">Secure Payment Gateway</div>
+    </header>
+
+    <div class="container">
+      <!-- Left Side: Login Form -->
+      <div class="card login-section">
+        <h2>Login to your eSewa Account</h2>
+
+        <!-- Dummy Username Field -->
+        <div class="form-group">
+          <label>eSewa ID (Mobile Number / Email)</label>
+          <!-- "readonly" means the user can't type in it, it's just for show -->
+          <input type="text" value="98XXXXXXX" readonly />
+        </div>
+
+        <!-- Dummy Password Field -->
+        <div class="form-group">
+          <label>Password / MPIN</label>
+          <input type="password" value="********" readonly />
+        </div>
+
+        <!-- Action Buttons -->
+        <div
+          class="action-buttons"
+          style="display: flex; gap: 15px; margin-top: 30px"
+        >
+          <!-- If user clicks cancel, go to failure page -->
+          <button
+            class="btn btn-cancel"
+            onclick="window.location.href = 'payment-failed.html'"
+          >
+            Cancel Payment
+          </button>
+          <!-- If user clicks pay, run the simulatePayment function below -->
+          <button class="btn btn-pay" onclick="simulatePayment()">
+            Login & Pay
+          </button>
+        </div>
+
+        <div
+          style="
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-align: center;
+          "
+        >
+          *This is a mock portal for demonstration purposes.
+        </div>
+      </div>
+
+      <!-- Right Side: Order Summary -->
+      <div class="card summary-card">
+        <!-- Store Details -->
+        <div class="merchant-info">
+          <h3>Sauni Food Delivery</h3>
+          <p style="color: #64748b; font-size: 0.9rem">
+            Transaction Reference: TXN-982347
+          </p>
+        </div>
+
+        <!-- Big Total Amount -->
+        <div class="amount-display">NPR 1,850.00</div>
+
+        <!-- Price Breakdown -->
+        <div style="margin-top: 30px">
+          <div class="details-row">
+            <span>Amount</span>
+            <span>Rs. 1,450.00</span>
+          </div>
+          <div class="details-row">
+            <span>Tax Amount</span>
+            <span>Rs. 250.00</span>
+          </div>
+          <div class="details-row">
+            <span>Delivery Charge</span>
+            <span>Rs. 150.00</span>
+          </div>
+          <!-- Final line with dashed top border -->
+          <div
+            class="details-row"
+            style="
+              font-weight: 600;
+              color: #0f172a;
+              margin-top: 15px;
+              border-top: 1px dashed #cbd5e1;
+              padding-top: 15px;
+            "
+          >
+            <span>Total Paying Amount</span>
+            <span>Rs. 1,850.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Small script to handle the "Pay" button click -->
+    <script>
+      function simulatePayment() {
+        // Find the pay button
+        const btn = document.querySelector(".btn-pay");
+
+        // Change the button text to show it's working
+        btn.innerHTML = "Processing...";
+        btn.style.opacity = "0.7";
+
+        // Wait 1.5 seconds, then go to the success page with a transaction reference
+        setTimeout(() => {
+          window.location.href = "payment-success.html?ref=TXN-982347";
+        }, 1500);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Failed</title>
+    <!-- Use the same CSS file for consistent styling -->
+    <link rel="stylesheet" href="checkout.css" />
+
+    <!-- Specific styles for the failure page -->
+    <style>
+      /* Center the failure card on the screen */
+      .result-container {
+        max-width: 600px;
+        margin: 80px auto;
+        text-align: center;
+      }
+
+      /* The white box holding the failure message */
+      .result-card {
+        background: white;
+        padding: 40px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
+      }
+
+      /* Red circle around the 'X' mark */
+      .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: #fee2e2; /* Light red background */
+        border-radius: 50%; /* Make it a perfect circle */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: var(--danger); /* Red color for the 'X' */
+      }
+
+      /* Size of the 'X' mark icon */
+      .icon-wrapper svg {
+        width: 40px;
+        height: 40px;
+      }
+
+      /* Title text styling */
+      h1 {
+        color: var(--text-main);
+        margin-bottom: 10px;
+        font-size: 1.75rem;
+      }
+
+      /* Description text styling */
+      p.desc {
+        color: var(--text-muted);
+        margin-bottom: 30px;
+      }
+
+      /* Box explaining why the payment failed */
+      .error-details {
+        background: #fef2f2;
+        border-radius: var(--radius-md);
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+        border: 1px dashed #fca5a5; /* Dashed red border */
+        color: #b91c1c; /* Dark red text */
+        font-size: 0.95rem;
+      }
+
+      /* Container for the buttons at the bottom */
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      /* General button styles */
+      .btn {
+        padding: 12px 24px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        text-decoration: none; /* Remove underline from links */
+        transition: all 0.2s; /* Smooth color changes */
+      }
+
+      /* Primary action button (Green) */
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px); /* Slight move up effect */
+      }
+
+      /* Secondary action button (White/Gray) */
+      .btn-secondary {
+        background: white;
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="result-container">
+      <div class="result-card">
+        <!-- 'X' Failure Icon -->
+        <div class="icon-wrapper">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+
+        <!-- Failure Messages -->
+        <h1>Payment Failed</h1>
+        <p class="desc">
+          We couldn't process your payment. Your order has not been placed.
+        </p>
+
+        <!-- Reason Box -->
+        <div class="error-details">
+          <strong>Reason:</strong> Payment was cancelled by the user or session
+          timed out. Please try again.
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <!-- Option to give up and return to checkout -->
+          <a href="checkout.html" class="btn btn-secondary">Cancel Order</a>
+          <!-- Option to try paying again -->
+          <a href="checkout.html" class="btn btn-primary">Try Again</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

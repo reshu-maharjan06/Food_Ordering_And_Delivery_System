@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Successful</title>
+    <!-- Use the same CSS file for consistent styling -->
+    <link rel="stylesheet" href="checkout.css" />
+
+    <!-- Specific styles for the success page -->
+    <style>
+      :root {
+        --primary: #ff4500;
+        --primary-dark: #cc3700;
+        --text-main: #111;
+        --text-muted: #666;
+        --success: #10b981;
+        --border-color: #eaeaea;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.05);
+      }
+      /* Center the success card on the screen */
+      .result-container {
+        max-width: 600px;
+        margin: 80px auto;
+        text-align: center;
+      }
+
+      /* The white box holding the success message */
+      .result-card {
+        background: white;
+        padding: 40px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
+      }
+
+      /* Green circle around the checkmark */
+      .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: #d1fae5; /* Light green background */
+        border-radius: 50%; /* Make it a perfect circle */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: var(--success); /* Dark green color for the checkmark */
+      }
+
+      /* Size of the checkmark icon */
+      .icon-wrapper svg {
+        width: 40px;
+        height: 40px;
+      }
+
+      /* Title text styling */
+      h1 {
+        color: var(--text-main);
+        margin-bottom: 10px;
+        font-size: 1.75rem;
+      }
+
+      /* Description text styling */
+      p.desc {
+        color: var(--text-muted);
+        margin-bottom: 30px;
+      }
+
+      /* Box containing the receipt information */
+      .receipt-details {
+        background: #f8fafc;
+        border-radius: var(--radius-md);
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+        border: 1px dashed #cbd5e1;
+      }
+
+      /* Each row of information (e.g., "Order Number" on left, "#123" on right) */
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+      }
+
+      /* The last row (Total Amount) gets a top border to stand out */
+      .detail-row:last-child {
+        margin-bottom: 0;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #cbd5e1;
+        font-weight: 600;
+      }
+
+      .detail-label {
+        color: var(--text-muted);
+      }
+
+      .detail-value {
+        color: var(--text-main);
+        font-weight: 500;
+      }
+
+      /* Container for the buttons at the bottom */
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      /* General button styles */
+      .btn {
+        padding: 12px 24px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        text-decoration: none; /* Remove underline from links */
+        transition: all 0.2s; /* Smooth color changes */
+      }
+
+      /* Primary action button (Green) */
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px); /* Slight move up effect */
+      }
+
+      /* Secondary action button (White/Gray) */
+      .btn-secondary {
+        background: white;
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="result-container">
+      <div class="result-card">
+        <!-- Checkmark Icon -->
+        <div class="icon-wrapper">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+
+        <!-- Success Messages -->
+        <h1>Payment Successful!</h1>
+        <p class="desc">
+          Thank you for your order. Your payment has been processed successfully
+          via eSewa.
+        </p>
+
+        <!-- Receipt Box -->
+        <div class="receipt-details">
+          <div class="detail-row">
+            <span class="detail-label">Order Number</span>
+            <span class="detail-value">#ORD-982347</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Transaction ID</span>
+            <span class="detail-value" id="txn-id">TXN-982347</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Payment Method</span>
+            <span class="detail-value" id="payment-method-text"
+              >eSewa Wallet</span
+            >
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Amount Paid</span>
+            <span class="detail-value">Rs. 1850.00</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <!-- Go back to checkout/store -->
+          <a href="checkout.html" class="btn btn-secondary">Back to Store</a>
+          <!-- Dummy link for order tracking -->
+          <a href="#" class="btn btn-primary">Track Order</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Small script to customize the page if they chose Cash On Delivery -->
+    <script>
+      // Check the URL for extra information (e.g., payment-success.html?method=cod)
+      const urlVariables = new URLSearchParams(window.location.search);
+      const transactionRef = urlVariables.get("ref");
+      const chosenMethod = urlVariables.get("method");
+
+      // If eSewa sent back a transaction ID, show it
+      if (transactionRef) {
+        document.getElementById("txn-id").textContent = transactionRef;
+      }
+
+      // If the user chose Cash on Delivery, change the texts to match
+      if (chosenMethod === "cod") {
+        document.querySelector(".desc").textContent =
+          "Your order has been placed successfully. You can pay on delivery.";
+        document.getElementById("payment-method-text").textContent =
+          "Cash on Delivery";
+      }
+    </script>
+  </body>
+</html>
