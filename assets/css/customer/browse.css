@@ -1,0 +1,236 @@
+:root {
+    --o: #ff3b00;
+    --o2: #cc2f00;
+    --ol: rgba(255, 59, 0, .09);
+    --ob: rgba(255, 59, 0, .18);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.aside {
+    width: 230px;
+    background: #fff;
+    border-right: 1px solid var(--border, #e5e7eb);
+    padding: 1.5rem 1rem;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.aside h3 {
+    font-size: .65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--muted, #6b7280);
+    margin-bottom: 1rem;
+    padding: 0 .5rem;
+}
+
+.cat-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: .6rem .8rem;
+    border-radius: 10px;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--muted, #6b7280);
+    cursor: pointer;
+    transition: .2s;
+    background: none;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.cat-filter:hover {
+    background: var(--ol);
+    color: var(--o);
+}
+
+.cat-filter.on {
+    background: var(--o);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(165, 16, 57, .25);
+}
+
+.cat-filter.on .cf-cnt {
+    background: rgba(255, 255, 255, .25);
+    color: #fff;
+}
+
+.cf-cnt {
+    font-size: .7rem;
+    background: rgba(0, 0, 0, .06);
+    padding: 1px 7px;
+    border-radius: 50px;
+    font-weight: 800;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.search-bar {
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+    background: #fff;
+    position: relative;
+}
+
+.search-inner {
+    position: relative;
+}
+
+.search-inner input {
+    width: 100%;
+    padding: .75rem 1.2rem .75rem 2.8rem;
+    border: 1.5px solid var(--border, #e5e7eb);
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .9rem;
+    outline: none;
+    transition: .25s;
+}
+
+.search-inner input:focus {
+    border-color: var(--o);
+    box-shadow: 0 0 0 3px rgba(165, 16, 57, .1);
+}
+
+.search-icon {
+    position: absolute;
+    left: .9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted, #6b7280);
+}
+
+.grid-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 2rem;
+}
+
+.grid-info {
+    font-size: .8rem;
+    color: var(--muted, #6b7280);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, .05);
+    transition: .3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .09);
+}
+
+.card-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    transition: transform .5s;
+    cursor: pointer;
+}
+
+.card:hover .card-img {
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 1rem 1.1rem 1.2rem;
+}
+
+.card-cat {
+    font-size: .65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--o);
+    margin-bottom: .3rem;
+}
+
+.card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: .3rem;
+}
+
+.card-desc {
+    font-size: .78rem;
+    color: var(--muted, #6b7280);
+    line-height: 1.55;
+    margin-bottom: .8rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 2;
+}
+
+.card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-price {
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.card-add {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--ol);
+    color: var(--o);
+    border: 1px solid var(--ob);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .25s;
+}
+
+.card-add:hover {
+    background: var(--o);
+    color: #fff;
+    transform: scale(1.15) rotate(8deg);
+}

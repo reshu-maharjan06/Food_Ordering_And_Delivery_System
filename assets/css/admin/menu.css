@@ -1,0 +1,268 @@
+.menu-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.menu-form-wrap {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+}
+
+.menu-table-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.img-preview {
+  width: 100%;
+  height: 160px;
+  border-radius: var(--rad-md);
+  border: 2px dashed var(--border);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text3);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 1.25rem;
+  transition: 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.img-preview.has-img {
+  border-style: solid;
+  border-color: var(--accent);
+}
+
+.img-preview-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.img-preview svg {
+  opacity: 0.35;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--rad-sm);
+  background: var(--surface2);
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.menu-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  transition: 0.15s;
+}
+
+.menu-item-row:last-child {
+  border-bottom: none;
+}
+
+.menu-item-row:hover {
+  background: #fafbff;
+}
+
+.mi-img {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--rad-sm);
+  object-fit: cover;
+  background: var(--surface2);
+  flex-shrink: 0;
+}
+
+.mi-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mi-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mi-cat {
+  font-size: 0.76rem;
+  color: var(--text3);
+  margin-top: 0.15rem;
+}
+
+.mi-popular {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin-left: 0.5rem;
+}
+
+.mi-price {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text);
+  white-space: nowrap;
+  padding: 0 1rem;
+}
+
+.mi-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0 1.4rem;
+  padding-top: 1rem;
+}
+
+.filter-tab {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-family: inherit;
+  transition: 0.15s;
+}
+
+.filter-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.search-bar {
+  padding: 0 1.4rem 0.75rem;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 0.88rem;
+  outline: none;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.search-bar input:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.search-bar svg {
+  position: absolute;
+  left: 1.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+}
+
+.view-modal-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.vm-img-wrap {
+  width: 140px;
+  height: 140px;
+  border-radius: var(--rad-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.vm-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vm-details {
+  flex: 1;
+}
+
+.vm-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.vm-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+
+.vm-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.vm-desc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text2);
+  margin-bottom: 1.5rem;
+}
